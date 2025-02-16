@@ -1,54 +1,30 @@
--- Rainbow function remains unchanged
-function rainbow(Text)
-    local add = 10
-    wait(1)
-    local k = 1
-    while k <= 255 do
-        Text.TextColor3 = Color3.new(k / 255, 0 / 255, 0 / 255)
-        k = k + add
-        wait()
-    end
+-- Rainbow function for animating text color
+local function rainbow(Text)
+    local add = 5 -- Speed of color transition
     while true do
-        k = 1
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(255 / 255, k / 255, 0 / 255)
-            k = k + add
-            wait()
+        for k = 0, 255, add do
+            Text.TextColor3 = Color3.new(k / 255, 0, 0) -- Red to Yellow
+            task.wait()
         end
-        k = 1
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(255 / 255 - k / 255, 255 / 255, 0 / 255)
-            k = k + add
-            wait()
+        for k = 0, 255, add do
+            Text.TextColor3 = Color3.new(1, k / 255, 0) -- Yellow to Green
+            task.wait()
         end
-        k = 1
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(0 / 255, 255 / 255, k / 255)
-            k = k + add
-            wait()
+        for k = 0, 255, add do
+            Text.TextColor3 = Color3.new(1 - k / 255, 1, 0) -- Green to Cyan
+            task.wait()
         end
-        k = 1
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(0 / 255, 255 / 255 - k / 255, 255 / 255)
-            k = k + add
-            wait()
+        for k = 0, 255, add do
+            Text.TextColor3 = Color3.new(0, 1, k / 255) -- Cyan to Blue
+            task.wait()
         end
-        k = 1
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(k / 255, 0 / 255, 255 / 255)
-            k = k + add
-            wait()
+        for k = 0, 255, add do
+            Text.TextColor3 = Color3.new(0, 1 - k / 255, 1) -- Blue to Magenta
+            task.wait()
         end
-        k = 1
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(255 / 255, 0 / 255, 255 / 255 - k / 255)
-            k = k + add
-            wait()
-        end
-        while k <= 255 do
-            Text.TextColor3 = Color3.new(255 / 255 - k / 255, 0 / 255, 0 / 255)
-            k = k + add
-            wait()
+        for k = 0, 255, add do
+            Text.TextColor3 = Color3.new(k / 255, 0, 1) -- Magenta to Red
+            task.wait()
         end
     end
 end
@@ -56,66 +32,62 @@ end
 -- Create the ScreenGui and Frame
 local array = Instance.new("ScreenGui", game:GetService("CoreGui"))
 local arrayFrame = Instance.new("Frame", array)
-arrayFrame.Size = UDim2.new(0.13, 0, 1, 0)
-arrayFrame.Position = UDim2.new(0.87, 0, 0, 0)
+arrayFrame.Size = UDim2.new(0.15, 0, 1, 0)
+arrayFrame.Position = UDim2.new(0.85, 0, 0, 0)
 arrayFrame.BackgroundTransparency = 1
 
 -- Create UIGridLayout
 local Grid = Instance.new("UIGridLayout", arrayFrame)
-Grid.CellPadding = UDim2.new(0, 0, 0.0001, 0)
+Grid.CellPadding = UDim2.new(0, 0, 0.005, 0)
 Grid.SortOrder = Enum.SortOrder.LayoutOrder
-Grid.CellSize = UDim2.new(1, 0, 0.0275, 0)
-Grid.HorizontalAlignment = "Left"
-
--- Enable/disable the array list based on shared config
-task.spawn(function()
-    while task.wait(1) do
-        array.Enabled = shared["CometConfigs"].Enabled
-    end
-end)
+Grid.CellSize = UDim2.new(1, 0, 0.03, 0)
+Grid.HorizontalAlignment = "Right"
 
 -- Arraylist module
-Arraylist = {
-    Add = function(Name, Suffix)
-        -- Create the TextLabel
-        local Text = Instance.new("TextLabel", arrayFrame)
-        local newName = Suffix and Name .. " {" .. Suffix .. "}" or Name
+local Arraylist = {}
 
-        Text.Name = Name
-        Text.BackgroundTransparency = 1
-        Text.Size = UDim2.new(0, 0, 1, 0) -- Start with 0 width for tweening
-        Text.Font = Font.new([[rbxasset://fonts/families/Inter.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal) -- Use Inter Bold font
-        Text.TextSize = Text.AbsoluteSize.Y * 0.7
-        Text.Text = newName .. " "
-        Text.TextXAlignment = "Right"
-        Text.LayoutOrder = -game:GetService("TextService"):GetTextSize(newName, Text.TextSize, Text.Font, Vector2.new(1e6, 1e6)).X
-        Text.TextColor3 = Color3.new(59 / 255, 170 / 255, 222 / 255)
-        Text.TextStrokeTransparency = 0
+-- Add function with tween animation
+function Arraylist.Add(Name, Suffix)
+    -- Create the TextLabel
+    local Text = Instance.new("TextLabel", arrayFrame)
+    local newName = Suffix and Name .. " {" .. Suffix .. "}" or Name
 
-        -- Tween the label into view
-        local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-        local tween = game:GetService("TweenService"):Create(Text, tweenInfo, { Size = UDim2.new(1, 0, 1, 0) })
-        tween:Play()
+    Text.Name = Name
+    Text.BackgroundTransparency = 1
+    Text.Size = UDim2.new(1, 0, 1, 0)
+    Text.Font = Font.new([[rbxasset://fonts/families/Inter.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal) -- Inter Bold
+    Text.TextSize = 14
+    Text.Text = newName
+    Text.TextXAlignment = "Right"
+    Text.TextColor3 = Color3.new(1, 1, 1) -- Start with white color
+    Text.TextStrokeTransparency = 0
 
-        -- Start the rainbow effect
-        task.spawn(function()
-            repeat
-                task.wait()
-                rainbow(Text)
-            until not Text
-        end)
-    end,
+    -- Position the label outside the screen initially
+    Text.Position = UDim2.new(1, 10, 0, 0)
 
-    Remove = function(Name)
-        if arrayFrame:FindFirstChild(Name) then
-            -- Tween the label out of view before destroying it
-            local Text = arrayFrame:FindFirstChild(Name)
-            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-            local tween = game:GetService("TweenService"):Create(Text, tweenInfo, { Size = UDim2.new(0, 0, 1, 0) })
-            tween.Completed:Wait()
-            Text:Destroy()
-        end
-    end,
-}
+    -- Tween the label into view
+    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tween = game:GetService("TweenService"):Create(Text, tweenInfo, { Position = UDim2.new(0, 0, 0, 0) })
+    tween:Play()
+
+    -- Start the rainbow effect
+    task.spawn(function()
+        rainbow(Text)
+    end)
+end
+
+-- Remove function with tween animation
+function Arraylist.Remove(Name)
+    local Text = arrayFrame:FindFirstChild(Name)
+    if not Text then return end
+
+    -- Tween the label out of view
+    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+    local tween = game:GetService("TweenService"):Create(Text, tweenInfo, { Position = UDim2.new(1, 10, 0, 0) })
+    tween.Completed:Wait()
+
+    -- Destroy the label after the tween completes
+    Text:Destroy()
+end
 
 return Arraylist
