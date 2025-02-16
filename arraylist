@@ -1,3 +1,4 @@
+--skidded for now
 function rainbow()
     local add = 10
     wait(1)
@@ -81,7 +82,7 @@ Arraylist = {
         Text.Name = Name
         Text.BackgroundTransparency = 1
         Text.Size = UDim2.new(0,0,1,0)
-        Text.Font = Font.new([[rbxasset://fonts/families/Inter.json]], Enum.FontWeight.Bold, Enum.FontStyle.Normal);
+        Text.Font = Enum.Font.Gotham
         local TextScale = Text.AbsoluteSize.Y * 0.7
         Text.TextSize = TextScale
         Text.Text = newName.." "
@@ -89,7 +90,7 @@ Arraylist = {
         Text.TextXAlignment = "Right"
         Text.LayoutOrder = -size.X
 	    Text.TextColor3 = Color3.new(59/255, 170/255, 222/255)
-	    Text.TextStrokeTransparency = 1
+	    Text.TextStrokeTransparency = 0
         task.spawn(function()
             repeat
                 task.wait()
